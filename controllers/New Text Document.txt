@@ -1,0 +1,84 @@
+function signInWithPhone(){
+		auth.useDeviceLanguage();
+		window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+		  'size': 'invisible',
+		  'callback': function(response) {
+			console.log("reCAPTCHA solved, allow signInWithPhoneNumber.");
+			//phoneAuth();
+		  }
+		});
+		phoneAuth();
+	}
+	
+	
+	
+function phoneAuth(){
+		let countryCode=countryCodeInput.options[countryCodeInput.selectedIndex].value;
+	    let phone = phoneInput.value;
+		let phoneNumber=countryCode+phone;
+		//console.log(phoneNumber);
+			//it takes two parameter first one is number,,,second one is recaptcha
+    auth.signInWithPhoneNumber(phoneNumber,window.recaptchaVerifier).then(function (confirmationResult) {
+        window.confirmationResult=confirmationResult;
+        coderesult=confirmationResult;
+        console.log("Message sent");
+		timeLeft=40;
+		timerDiv.style.display="block";
+		timerId = setInterval(countdown, 1000);
+		document.querySelector('#phoneDiv').style.display="none";
+		document.querySelector('#otpDiv').style.display="block";
+    }).catch(function (error) {
+       console.log(error);
+		Swal.fire(
+			'Error!',
+			error.message,
+			'error'
+        );
+		
+    });
+}
+
+
+
+function codeverify(code) {
+console.log(code);
+    coderesult.confirm(code).then(function (cred) {
+        console.log("Successfully registered");
+        console.log(cred.user);
+		location.href="index.html";
+		return false;
+		let URL="login?phone="+cred.user.phoneNumber;
+	  	makeAjaxCall(URL,"GET").then(res => {
+			if(res.status===200)
+			{
+				const user=res.data;
+				localStorage.setItem("token",user.token);
+				localStorage.setItem("phone",user.phone);
+				localStorage.setItem("email",user.email);
+				localStorage.setItem("userID",user.id);
+				localStorage.setItem("userType",user.status);
+			}
+			location.href="index.html";
+    },errorHandler );
+		
+    }).catch(function (error) {
+        console.error(error);
+		if(error.code!="auth/code-expired")
+		{
+			Swal.fire(
+			'Error!',
+			"Code is invalid,Please Enter the code Again",
+			'error'
+			);
+		}
+		else
+		{
+			Swal.fire(
+				'Error!',
+				error.message,
+				'error'
+			);
+		}
+		otpInput.value="";
+    });
+}

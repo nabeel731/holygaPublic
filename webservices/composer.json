@@ -1,0 +1,7 @@
+{
+    "require": {
+        "rbdwllr/reallysimplejwt": "^2.1",
+        "edwinhoksberg/php-fcm": "^1.0",
+        "phpmailer/phpmailer": "^6.1"
+    }
+}

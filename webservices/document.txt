@@ -1,0 +1,266 @@
+OWL APIS 
+
+Base URL : https://yourdomain.com/webservices/
+
+Accepts both Json,Form Data
+
+Send the JWT token returned in Login API with every other requests’s header with key (token) or in URL like BASEURL/profile?token={token}
+or in post attributes with key token
+
+(1)	Login : BASEURL/login?phone={phone}    
+Method:  GET
+This API will return token along user Data
+
+(2)  Get Profile Data :  BASEURL/profile   
+Method :  GET
+This will return Logged In user Profile Data
+
+(3)  Get All Services:  BASEURL/services 
+you can also  pass title like  BASEURL/services?title={title} to search service(s)
+Method :  GET
+
+
+(4) Get Jobs Data:  BASEURL/Jobs    GET
+Method : Get
+Hint: if you give job_id like 
+BASEURL/Jobs?job_id={id}
+This will return that specific job data 
+BASEURL/Jobs?sp_id={id} 
+This Will return that Service Provider Jobs If the looged User is itself serivce provider Otherwise
+it will return  Logged Users jobs with  that service provider
+BASEURL/Jobs?status={status} status 0=cancelled,1=pending,2=quoted,3=accepted,4=rejected,5=completed,6=quote rejected
+(6) GET Governorates :  BASEURL/governorates
+
+(7) GET CITIES : BASEURL/cities
+If you  give gid like BASEURL/cities?gid={id}
+It will  return cities under that governorate
+
+(8) Update Device Token BASEURL/updateDeviceToken
+Method POST 
+Example Input
+{
+	"device_id":"a1234567b"
+	"fcm_token":"sdhsdkjbkb23kb23bb"
+	//one of the above two is optional
+}
+
+(9) GET Service Provider(s)  : BASEURL/serviceProviders
+(a) If you  give service_id like BASEURL/serviceProviders?service_id={id}
+    It will  return Service Providers under that Service
+(b) and similarly If you  give sp_id like BASEURL/serviceProviders?sp_id={id}
+    It will  return That Specific Service Providers Data
+(c) If you  give q=nearest like BASEURL/serviceProviders?q=nearest
+    It Will return Service Providers under 8Km  or 5 mile of Logged in user Profile Saved Lat,Lng 
+    if User Has Not Added Location In Profile Setting It will ask to update Profile and add location in response
+(d) If You provide BASEURL/serviceProviders?q=nearest&lat={lat}&lng={lng}
+    It Will return Service Providers under 8Km  or 5 mile of given Lat,Lng
+(e) If you Give BASEURL/serviceProviders?q=nearest&lat={lat}&lng={lng}&service_id={service_id}
+     It Will return Service Providers Having Service Id Given And under 8Km  or 5 mile of given Lat,Lng
+(f) If you Give BASEURL/serviceProviders?service_id={service_id}&city_id={city_id}
+     It Will return Service Providers According to given Service ID and City ID
+
+
+(10) Service Provider Register:  BASEURL/SPRegister 
+Method : POST
+Example Input
+
+{
+	"first_name"  :"From",
+	"last_name" : "API",
+	"email":"1234@gmail.com"
+	"phone":"03001237890",
+	"area_id":4,
+	"service_id":3,
+	"email":"spfromapi@gmail.com",
+	"cnic" :"123456789101",
+	"profile_pic":"uploads/service_providers/customer.png",
+	"device_id":"12312423ddw",
+	"fcm_token":"sdhsdkjbkb23kb23bb"
+	// profile_pic is optional 
+	
+}
+
+(11) ADD Job Request:  BASEURL/jobRequest 
+Method : POST
+Example input 
+{
+	"user_id":6,
+	"sp_id":10,
+	"service_id":1,
+	"visit_time":"2020-03-20 08:24:20",
+	"work_time":"2020-03-20 08:24:20",
+	"workplace_address":"53 eden lane villas",
+	"google_address":"53 eden lane villas",
+	"workplace_latitude":"31.4697",
+	"workplace_longitude":"31.4697"
+	// description,attachment are optional
+	// job_type by Default is 1(Scheduled) You can pass job_type=2 if its urgent
+}
+
+(12) Add quote:  BASEURL/quote 
+Method : POST
+Example Input
+{
+	"job_id":2,
+	"cost":100,
+	"time":"4 days"
+	// description is optional
+}
+
+(13) Get Invoices:  BASEURL/invoices 
+Method : GET
+This Will return Logged In user invoices.
+If you want to get specific job invoice you can pass job_id in url like  BASEURL/invoices?job_id={id}
+If you want user invoices according to status you can pass status in url like BASEURL/invoices?status={status}
+status 	0=expired,1=pending,2-paid
+
+(14) Get Withdrawls:  BASEURL/withdrawls 
+Method : GET
+This Will return Logged In Service Provider Withdrawls.
+If you want Withdrawlsaccording to status you can pass status in url like BASEURL/withdrawls?status={status}
+status 	0=rejected,1=Requested,2=Accepted,3=Paid,4=wrong-info (given in request)
+
+(15) Get Transactions:  BASEURL/transactions 
+Method : GET
+This Will return Logged In Customer transactions.
+
+
+(16) Update quote:  BASEURL/updateQuote 
+Method : POST
+Example Input
+{
+"id":4,
+"cost":100,
+"time":3 hours,
+"description":"Dummy Description",
+"quote_status":"2"
+// Every attribute is optional other than id
+quote_status 0=rejected,1=pending,2=accepted
+}
+
+(17) Forget Password BASEURL/forgetPassword?email={email}
+Method : GET 
+This Will Send Reset Password Email and user can further proceed to reset his/her password
+
+(18) Contact Us : BASEURL/contactus
+Method : POST 
+Example Input
+{
+"message":"Whatever Message User Inputs",
+}
+This Will Send  Email to  Admin And also enter the information to database
+
+(19) Update Profile:  BASEURL/updateProfile
+Method : POST 
+Example Input
+{
+    "first_name":"fname",
+    "last_name":"lname",
+     "email":"Whatever email",
+     "country":"country",
+     "city":"city",
+     "address":"address",
+     "latitude":"121.13",
+     "longitude":"123.123",
+     "nationality":"PK",  // default is KW
+     "isValidResidency":"0",  // default is 1
+     "language":"ar",  // default is en
+     city_id,cnic,service_id are optional (these 3 are for SP)
+}
+you can also send the profile_pic attr with formData
+
+(20) Forget Password BASEURL/addPortfolio
+Method : POST 
+ expects image attribute with formData
+ 
+ (21) Forget Password BASEURL/deletePortfolio?image={imagePath}
+    Method : GET
+    
+(22) GET Application Splash Screens :  BASEURL/splashes
+    Method : GET
+    
+(23) GET About US Details :  BASEURL/aboutUs
+    Method : GET
+    
+(24) GET Terms And Privacy Details :  BASEURL/terms_privacy
+    Method : GET
+    
+
+(25) User Register:  BASEURL/register 
+Method : POST
+Example Input
+
+{
+	"first_name"  :"From",
+	"last_name" : "API",
+	"phone":"+923001237890",
+	"email":"userfromapi@gmail.com",
+	"device_id":"12312423ddw",
+	"fcm_token":"sdhsdkjbkb23kb23bb"
+	// fcm_token,profile_pic are optional 
+}
+
+(26) chnage Job Status :  BASEURL/chnageJobStatus?status={status}&job_id={jobID}
+    Method : GET
+    status 0=cancel,3=accept,4=reject,5=complete,6=quote-reject
+
+(27) Add Review :  BASEURL/review 
+Method : POST
+Example Input
+
+{
+	"job_id"  :1,
+	"stars" : 5
+	"review":"Your Comments",
+}
+
+28) Accept Quote :  BASEURL/acceptQuote?quote_id={quoteID}
+    Method : GET
+    
+(29) Pay Invoice/Add Transacction :  BASEURL/transaction 
+Method : POST
+Example Input
+{
+	"job_id"  :1,
+	"amount" : 20
+}
+
+(30) Get Service Provider Earnings :  BASEURL/eranings
+    Method : GET
+   
+(31) Get Services Data Witout Sending Authorization Token :  BASEURL/serviceOptions
+    Method : GET 
+    
+(32) Get cities Data :  BASEURL/cities
+    Method : GET 
+    
+(33) Add Withdrawl  Request:  BASEURL/withdrawlRequest 
+Method : POST
+Example Input
+{
+	"amount":10,
+	"bank":"MCB",
+	"account_holder" :"Account Holder Name",
+	"account":"12345678910"
+}
+
+
+    
+(34) Update Withdrawl Request:  BASEURL/updateWithdrawlRequest 
+Method : POST
+Example Input
+{
+	"amount":1,
+	"bank":"MCB",
+	"account_holder" :"Account Holder",
+	"account":"12345678910",
+	"id":1
+}
+    
+    
+ 
+
+
+
+
+
